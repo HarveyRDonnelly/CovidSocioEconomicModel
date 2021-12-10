@@ -2,6 +2,7 @@
 DOCSTRING
 """
 
+from __future__ import annotations
 import datetime
 
 # Region entities
@@ -30,8 +31,21 @@ class SubRegion(Region):
     Abstract data class to represent a sub region.
     """
 
+    cases: dict[int, CovidCase]
+
     def __init__(self, name: str, population: int) -> None:
         super().__init__(name, population)
+
+    def add_covid_case(self, covid_case: CovidCase) -> bool:
+        """
+        Adds a covid case to a sub region if it is not already added. Returns whether the sub region
+        is successfully added.
+        """
+        if covid_case.case_id in self.cases.keys():
+            return False
+        else:
+            self.cases[covid_case.case_id] = covid_case
+            return True
 
 
 class SuperRegion(Region):
@@ -99,6 +113,13 @@ class CovidCase:
     Class to represent a covid case.
     """
 
+    case_id: int
     date: datetime.date
-    super_region: None
-    sub_region: None
+    super_region: SuperRegion
+    sub_region: SubRegion
+
+    def __init__(self, case_id: int, date: datetime.date, super_region: SuperRegion, sub_region: SubRegion):
+        self.case_id = case_id
+        self.date = date
+        self.super_region = super_region
+        self.sub_region = sub_region
