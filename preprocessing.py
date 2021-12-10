@@ -2,12 +2,18 @@
 DOCSTRING
 """
 
-import datetime
+import data_loading as dl
+from config import TorontoConfig
 
 
 class Region:
     """
     Abstract data class to represent a sub region.
+
+    Instance Attributes:
+        - name: the name of the region.
+        - population: the population of the region.
+
     """
 
     name: str
@@ -54,16 +60,32 @@ class SuperRegion(Region):
             return True
 
 
-class City(SuperRegion):
-    """
-    Class to represent a neighbourhood within a region.
-    """
-
-
 class Neighbourhood(SubRegion):
     """
-    Class to represent a neighbourhood within a region.
+    Class to represent a neighbourhood.
     """
+
+    median_household_income: int
+
+    def __init__(self, name: str, population: int, median_household_income: int) -> None:
+        super().__init__(name, population)
+        self.median_household_income = median_household_income
+
+
+class City(SuperRegion):
+    """
+    Class to represent a city.
+    """
+
+    def __init__(self, name: str, population: int) -> None:
+        super().__init__(name, population)
+
+    def add_sub_region(self, neighbourhood: Neighbourhood) -> bool:
+        """
+        Add subregion to subregion dictionary if subregion is not already added. Return whether the
+        subregion is added.
+        """
+        return super().add_sub_region(neighbourhood)
 
 
 class PreprocessingSystem:
@@ -76,6 +98,22 @@ class PreprocessingSystem:
         - regions: a dictionary mapping the name of a region to an instance of a Region.
 
     """
-    start_date: datetime.datetime
-    end_date: datetime.datetime
-    regions: dict[str: Region]
+    regions: dict[str: SuperRegion]
+
+    def __init__(self) -> None:
+        self.regions = {}
+
+    def init_toronto_model(self) -> None:
+        """
+        Initialise classes for toronto model.
+        """
+
+        config = TorontoConfig()
+
+        data_loading_system = dl.DataLoadingToronto(config.start_date, config.end_date)
+        self.regions['Toronto'] = data_loading_system.load_super_region(config.paths['regions'])
+
+        neighbourhoods = data_loading_system.load_sub_regions(config.paths['regions'])
+
+        for neighbourhood in neighbourhoods.values():
+            self.regions['Toronto'].add_sub_region(neighbourhood)
