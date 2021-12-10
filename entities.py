@@ -2,6 +2,10 @@
 DOCSTRING
 """
 
+import datetime
+
+# Region entities
+
 
 class Region:
     """
@@ -74,8 +78,11 @@ class City(SuperRegion):
     Class to represent a city.
     """
 
+    neighbourhoods: dict[str, Neighbourhood]
+
     def __init__(self, name: str, population: int) -> None:
         super().__init__(name, population)
+        self.neighbourhoods = self._sub_regions
 
     def add_sub_region(self, neighbourhood: Neighbourhood) -> bool:
         """
@@ -83,3 +90,15 @@ class City(SuperRegion):
         subregion is added.
         """
         return super().add_sub_region(neighbourhood)
+
+
+# Covid Case entities
+
+class CovidCase:
+    """
+    Class to represent a covid case.
+    """
+
+    date: datetime.date
+    super_region: None
+    sub_region: None

@@ -3,7 +3,6 @@ DOCSTRING
 """
 import csv
 import datetime
-
 from entities import *
 
 
