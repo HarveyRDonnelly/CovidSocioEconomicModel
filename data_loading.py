@@ -4,7 +4,7 @@ DOCSTRING
 import csv
 import datetime
 
-import preprocessing as p
+from entities import *
 
 
 # Data Formatting Functions
@@ -64,7 +64,7 @@ class DataLoadingToronto(DataLoadingSystem):
     def __init__(self, start_date: datetime.date, end_date: datetime.date):
         super().__init__(start_date, end_date)
 
-    def load_super_region(self, path: str) -> p.City:
+    def load_super_region(self, path: str) -> City:
         """
         Method to load data for super regions from a file.
         """
@@ -78,11 +78,11 @@ class DataLoadingToronto(DataLoadingSystem):
             name = city_row[0]
             population = remove_commas_number_string(city_row[1])
 
-            city = p.City(name, population)
+            city = City(name, population)
 
         return city
 
-    def load_sub_regions(self, path: str) -> dict[str, p.Neighbourhood]:
+    def load_sub_regions(self, path: str) -> dict[str, Neighbourhood]:
         """
         Method to load data for all sub regions from a file.
         """
@@ -97,7 +97,7 @@ class DataLoadingToronto(DataLoadingSystem):
                 name = row[0]
                 population = remove_commas_number_string(row[1])
                 median_household_income = remove_commas_number_string(row[2])
-                neighbourhoods[name] = p.Neighbourhood(name, population, median_household_income)
+                neighbourhoods[name] = Neighbourhood(name, population, median_household_income)
 
         return neighbourhoods
 
