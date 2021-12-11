@@ -37,7 +37,7 @@ class PreprocessingSystem:
 
         for neighbourhood in neighbourhoods.values():
             self.regions['Toronto'].add_sub_region(neighbourhood)
-            neighbourhood_cases = data_loading_system.load_covid_cases(config.paths['cases'],
-                                                                       neighbourhood)
-            for case in neighbourhood_cases.values():
-                neighbourhood.add_covid_case(case)
+            # neighbourhood_cases = data_loading_system.load_covid_cases(config.paths['cases'],
+            #                                                            neighbourhood)
+            # for case in neighbourhood_cases.values():
+            #     neighbourhood.add_covid_case(case)
