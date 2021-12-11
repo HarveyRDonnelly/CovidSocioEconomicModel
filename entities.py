@@ -136,7 +136,7 @@ class SuperRegion(Region):
         if len(all_num_cases) >= 2:
             self.max_num_cases = max(all_num_cases)
             self.min_num_cases = min(all_num_cases)
-            self.case_multiplier = 10 / (self.max_household_income - self.min_household_income)
+            self.case_multiplier = 10 / (self.max_num_cases - self.min_num_cases)
         elif len(all_num_cases) == 1:
             self.max_num_cases = max(all_num_cases)
             self.min_num_cases = min(all_num_cases)
