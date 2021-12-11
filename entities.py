@@ -33,11 +33,15 @@ class SubRegion(Region):
 
     cases: dict[int, CovidCase]
     super_region: SuperRegion
+    median_household_income: int
+    scaled_economic_index: float
 
-    def __init__(self, name: str, population: int, super_region: SuperRegion) -> None:
+    def __init__(self, name: str, population: int, super_region: SuperRegion, median_household_income: int) -> None:
         super().__init__(name, population)
         self.super_region = super_region
         self.cases = {}
+        self.median_household_income = median_household_income
+        self.scaled_economic_index = 0
 
     def add_covid_case(self, covid_case: CovidCase) -> bool:
         """
@@ -61,10 +65,14 @@ class SuperRegion(Region):
     """
 
     _sub_regions: dict[str: SubRegion]
+    economic_multiplier: float
+    max_household_income: int
+    min_household_income: int
 
     def __init__(self, name: str, population: int) -> None:
         super().__init__(name, population)
         self._sub_regions = {}
+        self.update_economic_scaling()
 
     def add_sub_region(self, subregion: SubRegion) -> bool:
         """
@@ -77,17 +85,47 @@ class SuperRegion(Region):
             self._sub_regions[subregion.name] = subregion
             return True
 
+    def update_economic_scaling(self) -> float:
+        """
+        Update the economic scaling of the super region and its subregions. Returns the economic scaling multiplier.
+        """
+        household_incomes = {sub_region.median_household_income for sub_region
+                             in self._sub_regions.values()}
+
+        if len(household_incomes) >= 2:
+            self.max_household_income = max(household_incomes)
+            self.min_household_income = min(household_incomes)
+            self.economic_multiplier = 10 / (self.max_household_income - self.min_household_income)
+        elif len(household_incomes) == 1:
+            self.max_household_income = max(household_incomes)
+            self.min_household_income = min(household_incomes)
+            self.economic_multiplier = 0
+        else:
+            self.max_household_income = 0
+            self.min_household_income = 0
+            self.economic_multiplier = 0
+
+        for sub_region in self._sub_regions.values():
+            sub_region.scaled_economic_index = self.calculate_scaled_economic_index(
+                sub_region.median_household_income)
+
+        return self.economic_multiplier
+
+    def calculate_scaled_economic_index(self, household_income: int) -> float:
+        """
+        Return the scaled economic index for the super region.
+        """
+
+        return (household_income - self.min_household_income) * self.economic_multiplier
+
 
 class Neighbourhood(SubRegion):
     """
     Class to represent a neighbourhood.
     """
 
-    median_household_income: int
-
     def __init__(self, name: str, population: int, city: City, median_household_income: int) -> None:
-        super().__init__(name, population, city)
-        self.median_household_income = median_household_income
+        super().__init__(name, population, city, median_household_income)
 
 
 class City(SuperRegion):
