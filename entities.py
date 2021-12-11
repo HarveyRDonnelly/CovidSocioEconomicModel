@@ -32,9 +32,12 @@ class SubRegion(Region):
     """
 
     cases: dict[int, CovidCase]
+    super_region: SuperRegion
 
-    def __init__(self, name: str, population: int) -> None:
+    def __init__(self, name: str, population: int, super_region: SuperRegion) -> None:
         super().__init__(name, population)
+        self.super_region = super_region
+        self.cases = {}
 
     def add_covid_case(self, covid_case: CovidCase) -> bool:
         """
@@ -82,8 +85,8 @@ class Neighbourhood(SubRegion):
 
     median_household_income: int
 
-    def __init__(self, name: str, population: int, median_household_income: int) -> None:
-        super().__init__(name, population)
+    def __init__(self, name: str, population: int, city: City, median_household_income: int) -> None:
+        super().__init__(name, population, city)
         self.median_household_income = median_household_income
 
 
