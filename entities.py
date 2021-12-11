@@ -81,6 +81,7 @@ class SuperRegion(Region):
         super().__init__(name, population)
         self._sub_regions = {}
         self.update_economic_scaling()
+        self.update_case_scaling()
 
     def add_sub_region(self, subregion: SubRegion) -> bool:
         """
