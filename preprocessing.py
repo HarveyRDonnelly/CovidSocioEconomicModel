@@ -32,7 +32,12 @@ class PreprocessingSystem:
         data_loading_system = dl.DataLoadingToronto(config.start_date, config.end_date)
         self.regions['Toronto'] = data_loading_system.load_super_region(config.paths['regions'])
 
-        neighbourhoods = data_loading_system.load_sub_regions(config.paths['regions'])
+        neighbourhoods = data_loading_system.load_sub_regions(config.paths['regions'],
+                                                              self.regions['Toronto'])
 
         for neighbourhood in neighbourhoods.values():
             self.regions['Toronto'].add_sub_region(neighbourhood)
+            neighbourhood_cases = data_loading_system.load_covid_cases(config.paths['cases'],
+                                                                       neighbourhood)
+            for case in neighbourhood_cases.values():
+                neighbourhood.add_covid_case(case)
