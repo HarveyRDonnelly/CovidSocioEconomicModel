@@ -32,16 +32,20 @@ class SubRegion(Region):
     """
 
     cases: dict[int, CovidCase]
+    num_cases: int
     super_region: SuperRegion
     median_household_income: int
     scaled_economic_index: float
+    scaled_case_index: float
 
     def __init__(self, name: str, population: int, super_region: SuperRegion, median_household_income: int) -> None:
         super().__init__(name, population)
         self.super_region = super_region
         self.cases = {}
+        self.num_cases = 0
         self.median_household_income = median_household_income
         self.scaled_economic_index = 0
+        self.scaled_case_index = 0
 
     def add_covid_case(self, covid_case: CovidCase) -> bool:
         """
@@ -52,6 +56,7 @@ class SubRegion(Region):
             return False
         else:
             self.cases[covid_case.case_id] = covid_case
+            self.num_cases = len(self.cases)
             return True
 
 
@@ -68,6 +73,9 @@ class SuperRegion(Region):
     economic_multiplier: float
     max_household_income: int
     min_household_income: int
+    case_multiplier: float
+    max_num_cases: int
+    min_num_cases: int
 
     def __init__(self, name: str, population: int) -> None:
         super().__init__(name, population)
@@ -113,10 +121,42 @@ class SuperRegion(Region):
 
     def calculate_scaled_economic_index(self, household_income: int) -> float:
         """
-        Return the scaled economic index for the super region.
+        Return the scaled economic index for the sub region.
         """
 
         return (household_income - self.min_household_income) * self.economic_multiplier
+
+    def update_case_scaling(self) -> float:
+        """
+        Update the case scaling of the super region and its subregions. Returns the case scaling multiplier.
+        """
+        all_num_cases = {sub_region.num_cases for sub_region in self._sub_regions.values()}
+
+        if len(all_num_cases) >= 2:
+            self.max_num_cases = max(all_num_cases)
+            self.min_num_cases = min(all_num_cases)
+            self.case_multiplier = 10 / (self.max_household_income - self.min_household_income)
+        elif len(all_num_cases) == 1:
+            self.max_num_cases = max(all_num_cases)
+            self.min_num_cases = min(all_num_cases)
+            self.case_multiplier = 0
+        else:
+            self.max_num_cases = 0
+            self.min_num_cases = 0
+            self.case_multiplier = 0
+
+        for sub_region in self._sub_regions.values():
+            sub_region.scaled_case_index = self.calculate_scaled_case_index(
+                sub_region.num_cases)
+
+        return self.case_multiplier
+
+    def calculate_scaled_case_index(self, num_cases: int) -> float:
+        """
+        Return the scaled case index for the sub region.
+        """
+
+        return (num_cases - self.min_num_cases) * self.case_multiplier
 
 
 class Neighbourhood(SubRegion):
