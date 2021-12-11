@@ -117,7 +117,6 @@ class DataLoadingToronto(DataLoadingSystem):
 
         return neighbourhoods
 
-
     def load_covid_cases(self, path: str, neighbourhood: Neighbourhood) -> dict[int, CovidCase]:
         """
         Method to load all covid cases for a neighbourhood.
