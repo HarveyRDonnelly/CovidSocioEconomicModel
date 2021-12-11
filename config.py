@@ -18,5 +18,5 @@ class TorontoConfig:
 
         self.paths = {
             'regions': 'data/toronto_regions.csv',
-            'cases': 'data/toronto_covid_cases.csv'
+            'cases': 'data/toronto_covid_cases_debug.csv'
         }
