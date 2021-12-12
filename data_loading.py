@@ -126,16 +126,12 @@ class DataLoadingToronto(DataLoadingSystem):
             next(reader)  # Skip the dataset's header.
 
             cases = {}
-
-            rows_in_time_interval = [row for row in reader
-                                     if self.start_date <= string_to_datetime(row[9])
-                                     <= self.end_date]
-
-            for row in rows_in_time_interval:
-                case_id = int(row[0])
-                date = string_to_datetime(row[9])
-                super_region = neighbourhood.super_region
-                sub_region = neighbourhood
-                cases[case_id] = CovidCase(case_id, date, super_region, sub_region)
+            for row in reader:
+                if self.start_date <= string_to_datetime(row[9]) <= self.end_date and neighbourhood.name == row[4]:
+                    case_id = int(row[0])
+                    date = string_to_datetime(row[9])
+                    super_region = neighbourhood.super_region
+                    sub_region = neighbourhood
+                    cases[case_id] = CovidCase(case_id, date, super_region, sub_region)
 
         return cases
