@@ -1,6 +1,7 @@
 """ Visualizes covid data for a given system """
 from preprocessing import PreprocessingSystem
 import pandas as pd
+import matplotlib
 
 
 class RegionVisual:
@@ -14,13 +15,16 @@ class RegionVisual:
         """ Creates a scatter plot comparing subregions income against covid cases """
         data = {'Cases': [], 'Income': []}
         toronto = self.system.regions['Toronto']
-        for subregion in toronto.neighbourhood:
-            data['Cases'].append(subregion.cases/subregion.population)
-            data['Income'].append(subregion.median_household_income)
-            df = pd.DataFrame(data)
-            df.plot.scatter()
+        hoods = toronto.neighbourhoods
+        for subregion in hoods:
+            data['Cases'].append(len(hoods[subregion].cases) / hoods[subregion].population)
+            data['Income'].append(hoods[subregion].median_household_income)
+        df = pd.DataFrame(data)
+        df.plot.scatter(x='Income', y='Cases')
 
 
-
-
-
+def do_the_thing():
+    p = PreprocessingSystem()
+    p.init_toronto_model()
+    r = RegionVisual(p)
+    r.scatter_visual()
