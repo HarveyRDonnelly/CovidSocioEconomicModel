@@ -1,7 +1,6 @@
 """ Visualizes covid data for a given system """
 from preprocessing import PreprocessingSystem
 from regression import ExponentialRegressionModel
-import pandas as pd
 import numpy as np
 import shapefile as shp
 import matplotlib.pyplot as plt
@@ -27,10 +26,6 @@ class RegionVisual:
             if hoods[subregion].scaled_case_index != 0 and hoods[subregion].scaled_economic_index != 0:
                 points.append((hoods[subregion].scaled_economic_index, hoods[subregion].scaled_case_index))
         regression_model = ExponentialRegressionModel(points, 1000)
-
-        df = pd.DataFrame(data)
-        ax = df.plot.scatter(x='Income', y='Cases')
-        a, b = 5.2327, 0.7709
         x = np.linspace(0, 10, 100)
         y = (regression_model.b**x) * regression_model.a
         plt.plot(x, y)
