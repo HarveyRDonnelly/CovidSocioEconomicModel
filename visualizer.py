@@ -8,14 +8,21 @@ import seaborn as sns
 
 
 class RegionVisual:
-    """ Creates a shapely visual of different attributes of a region"""
+    """
+    Creates a shapely visual of different attributes of a region
+
+    Instance Attributes:
+    - system: the preprocessing system which will have visuals created for
+    """
     system: PreprocessingSystem
 
     def __init__(self, system: PreprocessingSystem):
         self.system = system
 
     def toronto_scatter_visual(self) -> None:
-        """ Creates a scatter plot comparing subregions income against covid cases """
+        """
+        Creates a scatter plot comparing subregions income against covid cases
+        """
         data = {'Cases': [], 'Income': []}
         toronto = self.system.regions['Toronto']
         hoods = toronto.neighbourhoods
@@ -33,7 +40,11 @@ class RegionVisual:
         plt.show()
 
     def toronto_heatmap(self, variable: str) -> None:
-        """ Creates a heat map of a region's covid numbers """
+        """ Creates a heat map of a region's covid numbers
+
+            Preconditions:
+            - variable in ['Covid', 'Income']
+        """
         sns.set(style='whitegrid', palette='pastel', color_codes=True)
         sns.mpl.rc('figure', figsize=(10, 6))
 
@@ -56,13 +67,20 @@ class RegionVisual:
             colour = self.get_colour(name_result, variable)
             plt.plot(x, y, 'k')
             plt.fill(x, y, colour)
-            x0 = np.mean(x)
-            y0 = np.mean(y)
+            if variable == 'Covid':
+                plt.title('Covid-19 Intensity in Toronto Neighbourhoods')
+            elif variable == 'Income':
+                plt.title('Median Household Income in Toronto Neighbourhoods')
             id = id + 1
 
     def get_colour(self, name_result: str, variable: str) -> str:
         """ Returns the colour corresponding to the amount of covid cases
-            per capita in a neighbourhood"""
+            per capita in a neighbourhood
+
+            Preconditions:
+            - name_result in toronto.neighbourhoods.keys()
+            - variable in ['Covid', 'Income']
+        """
         colour = ''
         if variable == 'Covid':
             colours = ['#dadaebFF', '#bcbddcF0', '#9e9ac8F0',
@@ -82,6 +100,7 @@ class RegionVisual:
             elif num_cases >= 4200:
                 colour = colours[5]
             return colour
+
         elif variable == 'Income':
             colours = ['#ffffd4', '#fee391', '#fec44f',
                        '#fe9929', '#d95f0e', '#993404']
@@ -102,7 +121,7 @@ class RegionVisual:
             return colour
 
     def neighbourhood_name_filtration(self, name_result: str) -> str:
-        """ Returns neighbourhood names which match up with other datasets"""
+        """ Returns neighbourhood names which match up with other datasets."""
         if name_result == 'North St.James Town':
             name_result = 'North St. James Town'
         if name_result == 'Danforth East York':
@@ -114,19 +133,18 @@ class RegionVisual:
         return name_result
 
 
-def draw_visuals_toronto():
-
+def draw_visuals_toronto() -> None:
+    """ Initializes a the toronto model and runs the scatter plot visual."""
     p = PreprocessingSystem()
     p.init_toronto_model()
     r = RegionVisual(p)
     r.toronto_scatter_visual()
 
 
-def draw_heat_toronto():
+def draw_heat_toronto() -> None:
+    """ Initializes toronto model and runs both heat map visuals."""
     p = PreprocessingSystem()
     p.init_toronto_model()
     r = RegionVisual(p)
     r.toronto_heatmap('Covid')
     r.toronto_heatmap('Income')
-
-draw_heat_toronto()
