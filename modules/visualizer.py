@@ -1,6 +1,6 @@
 """ Visualizes covid data for a given system """
-from preprocessing import PreprocessingSystem
-from regression import ExponentialRegressionModel
+from modules.preprocessing import PreprocessingSystem
+from modules.regression import ExponentialRegressionModel
 import numpy as np
 import shapefile as shp
 import matplotlib.pyplot as plt
@@ -48,7 +48,7 @@ class RegionVisual:
         sns.set(style='whitegrid', palette='pastel', color_codes=True)
         sns.mpl.rc('figure', figsize=(10, 6))
 
-        shp_path = 'hood_shps/Neighbourhoods.shp'
+        shp_path = '../data/toronto_boundaries/Neighbourhoods.shp'
 
         sf = shp.Reader(shp_path)
         plt.figure(figsize=(11, 9))
