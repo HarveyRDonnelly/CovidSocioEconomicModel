@@ -2,13 +2,10 @@
 from preprocessing import PreprocessingSystem
 from regression import ExponentialRegressionModel
 import pandas as pd
-from string import digits
-import matplotlib
 import numpy as np
 import shapefile as shp
 import matplotlib.pyplot as plt
 import seaborn as sns
-import os
 
 
 class RegionVisual:
@@ -40,8 +37,8 @@ class RegionVisual:
         plt.scatter(data['Income'], data['Cases'])
         plt.show()
 
-    def toronto_region_heatmap(self) -> None:
-        """ Creates a heat map of a region """
+    def toronto_heatmap(self, variable: str) -> None:
+        """ Creates a heat map of a region's covid numbers """
         sns.set(style='whitegrid', palette='pastel', color_codes=True)
         sns.mpl.rc('figure', figsize=(10, 6))
 
@@ -57,26 +54,73 @@ class RegionVisual:
             name_list = name.split()
             for word in range(len(name_list)-1):
                 name_result += (" " + name_list[word])
-            name_result.rstrip()
-            colours = ['#dadaebFF', '#bcbddcF0', '#9e9ac8F0',
-             '#807dbaF0', '#6a51a3F0', '#54278fF0']
-            colour = ''
-            toronto = self.system.regions['Toronto']
-            num_cases = toronto.neighbourhoods['name_result'].num_cases_per_cap
-            print(name_result)
+            name_result = name_result.strip()
+            name_result = self.neighbourhood_name_filtration(name_result)
             x = [i[0] for i in shape.shape.points[:]]
             y = [i[1] for i in shape.shape.points[:]]
-
+            colour = self.get_colour(name_result, variable)
             plt.plot(x, y, 'k')
-            plt.fill(x, y, 'r')
+            plt.fill(x, y, colour)
             x0 = np.mean(x)
             y0 = np.mean(y)
-
-            plt.text(x0, y0, name_result, fontsize=5)
             id = id + 1
+
+    def get_colour(self, name_result: str, variable: str) -> str:
+        """ Returns the colour corresponding to the amount of covid cases
+            per capita in a neighbourhood"""
+        colour = ''
+        if variable == 'Covid':
+            colours = ['#dadaebFF', '#bcbddcF0', '#9e9ac8F0',
+                       '#807dbaF0', '#6a51a3F0', '#54278fF0']
+            toronto = self.system.regions['Toronto']
+            num_cases = toronto.neighbourhoods[name_result].num_cases_per_cap
+            if num_cases < 1000:
+                colour = colours[0]
+            elif 1000 <= num_cases < 1800:
+                colour = colours[1]
+            elif 1800 <= num_cases < 2600:
+                colour = colours[2]
+            elif 2600 <= num_cases < 3400:
+                colour = colours[3]
+            elif 3400 <= num_cases < 4200:
+                colour = colours[4]
+            elif num_cases >= 4200:
+                colour = colours[5]
+            return colour
+        elif variable == 'Income':
+            colours = ['#ffffd4', '#fee391', '#fec44f',
+                       '#fe9929', '#d95f0e', '#993404']
+            toronto = self.system.regions['Toronto']
+            income = toronto.neighbourhoods[name_result].median_household_income
+            if income < 50000:
+                colour = colours[5]
+            elif 50000 <= income < 70000:
+                colour = colours[4]
+            elif 70000 <= income < 90000:
+                colour = colours[3]
+            elif 90000 <= income < 110000:
+                colour = colours[2]
+            elif 110000 <= income < 150000:
+                colour = colours[1]
+            elif income >= 150000:
+                colour = colours[0]
+            return colour
+
+    def neighbourhood_name_filtration(self, name_result: str) -> str:
+        """ Returns neighbourhood names which match up with other datasets"""
+        if name_result == 'North St.James Town':
+            name_result = 'North St. James Town'
+        if name_result == 'Danforth East York':
+            name_result = 'Danforth-East York'
+        if name_result == 'Briar Hill-Belgravia':
+            name_result = 'Briar Hill - Belgravia'
+        if name_result == 'Cabbagetown-South St.James Town':
+            name_result = 'Cabbagetown-South St. James Town'
+        return name_result
 
 
 def draw_visuals_toronto():
+
     p = PreprocessingSystem()
     p.init_toronto_model()
     r = RegionVisual(p)
@@ -85,5 +129,9 @@ def draw_visuals_toronto():
 
 def draw_heat_toronto():
     p = PreprocessingSystem()
+    p.init_toronto_model()
     r = RegionVisual(p)
-    r.toronto_region_heatmap()
+    r.toronto_heatmap('Covid')
+    r.toronto_heatmap('Income')
+
+draw_heat_toronto()
