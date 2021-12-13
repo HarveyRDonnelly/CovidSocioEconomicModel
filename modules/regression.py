@@ -1,5 +1,33 @@
 """
-DOCSTRING
+Module Title: Regression Module
+Source Path: modules/regression.py
+
+Description:
+
+The Regression Module contains the classes representing the Linear and Exponential regression
+models used within this project. An instance of a LinearRegressionModel will contain the gradient
+and the y-intercept of the best-fitting linear function for an inputted set of coordinates. This is
+determined using the residual-squared linear regression method.
+
+An instance of an ExponentialRegressionModel will contain the constants a and b of the best fitting
+exponential function in the form of y = a * b^x. This is calculated by taking the natural logarithm
+of all y-coordinates and then applying a linear regression model to the ln(y) points against the
+x-coordinates. The gradient of the linear function represents ln(b) and the y_intercept represents
+ln(a).
+
+Please note, the linear and exponential regression methods in this class were written from scratch
+using only an abstract understanding of residual-squared regression. No external code is used.
+
+
+===============================
+
+CSC110 Final Project:
+
+"Virus of Inequality: The Socio-Economic Disparity of COVID-19 Cases
+in the City of Toronto"
+
+This file is Copyright (c) 2021 Harvey Ronan Donnelly and Ewan Robert Jordan.
+
 """
 import math as m
 
@@ -7,6 +35,28 @@ import math as m
 class LinearRegressionModel:
     """
     Class representing a linear regression model.
+
+    Instance Attributes:
+        - coordinates: a list of tuples representing the coordinates that will be used as training
+        data for the regression model.
+        - angle: the angle interval for each rotation of the linear function.
+        - angle_divisor: the number of divisions of the angle between the x and y axis that the
+        linear function will be rotated.
+        - gradient: the gradient m of the best fitting linear function such that y = mx + c.
+        - y_intercept: the y-intercept c of the best fitting linear function such that y = mx + c.
+        - r_squared: the residual-squared value for the best fitting linear function.
+
+    Representation Invariants:
+        - self.angle_divisor >= 1
+        - 0 < self.angle < math.pi / 2
+
+    >>> example_coords = [(0.0,1.0), (1.0,2.0), (2.0,3.0), (3.0,4.0)]
+    >>> model = LinearRegressionModel(example_coords, 100)
+    >>> m.isclose(model.gradient, 1.0)
+    True
+    >>> m.isclose(model.y_intercept, 1.0)
+    True
+
     """
 
     coordinates: list[tuple[float, float]]
@@ -14,17 +64,18 @@ class LinearRegressionModel:
     angle_divisor: int
     gradient: float
     y_intercept: float
+    r_squared: float
 
     def __init__(self, coordinates: list[tuple[float, float]], angle_divisor: int) -> None:
         self.coordinates = coordinates
         self.angle_divisor = angle_divisor
         self.angle = m.pi / angle_divisor
-        self.gradient, self.y_intercept = self.estimate_fit(coordinates)
+        self.gradient, self.y_intercept, self.r_squared = self.estimate_fit(coordinates)
 
-    def estimate_fit(self, coordinates: list[tuple[float, float]]) -> tuple[float, float]:
+    def estimate_fit(self, coordinates: list[tuple[float, float]]) -> tuple[float, float, float]:
         """
-        Returns the constant coefficient m and the constant c for a fitted linear function of the
-        coordinates such that y = mx + c.
+        Returns the constant coefficient m, the constant c and the residual-squared value
+        for a fitted linear function of the coordinates such that y = mx + c.
         """
 
         iterations = self.angle_divisor
@@ -47,7 +98,9 @@ class LinearRegressionModel:
 
         min_r_squared = min(r_squared_so_far.keys())
 
-        return r_squared_so_far[min_r_squared]
+        coefficient_m, constant_c = r_squared_so_far[min_r_squared]
+
+        return (coefficient_m, constant_c, min_r_squared)
 
     def sum_residuals_squared(self, coordinates: list[tuple[float, float]], coefficient_m: float,
                               constant_c: float) -> float:
@@ -68,6 +121,12 @@ class LinearRegressionModel:
             -> tuple[float, float]:
         """
         Returns the mean coordinate for the training data.
+
+        >>> example_coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
+        >>> model = LinearRegressionModel(example_coords, 100)
+        >>> model.calculate_mean_coordinate(example_coords)
+        (1.0, 1.0)
+
         """
         x_values = [coord[0] for coord in coordinates]
         y_values = [coord[1] for coord in coordinates]
@@ -81,6 +140,12 @@ class LinearRegressionModel:
         """
         Returns the y-intercept of a linear function from the gradient coefficient_m and an
         intercepted coordinate.
+
+        >>> example_coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
+        >>> model = LinearRegressionModel(example_coords, 100)
+        >>> model.calculate_y_intercept(1.0, (2.0, 3.0))
+        1.0
+
         """
         return coordinate[1] - (coefficient_m * coordinate[0])
 
@@ -99,7 +164,7 @@ class ExponentialRegressionModel(LinearRegressionModel):
 
         self.log_coordinates = self.calculate_log_coordinates(coordinates)
 
-        log_b, log_a = self.estimate_fit(self.log_coordinates)
+        log_b, log_a, self.r_squared = self.estimate_fit(self.log_coordinates)
 
         self.a = m.e ** log_a
         self.b = m.e ** log_b
