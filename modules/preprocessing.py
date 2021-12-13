@@ -2,9 +2,9 @@
 DOCSTRING
 """
 
-import data_loading as dl
-from config import TorontoConfig
-from entities import *
+from modules import data_loading as dl
+from modules.config import TorontoConfig
+from modules.entities import *
 
 
 class PreprocessingSystem:
