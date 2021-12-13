@@ -16,7 +16,7 @@ x-coordinates. The gradient of the linear function represents ln(b) and the y_in
 ln(a).
 
 Please note, the linear and exponential regression methods in this class were written from scratch
-using only an abstract understanding of residual-squared regression. No external code is used.
+using only an abstract understanding of residual-squared regression. No external code was used.
 
 
 ===============================
@@ -29,7 +29,7 @@ in the City of Toronto"
 This file is Copyright (c) 2021 Harvey Ronan Donnelly and Ewan Robert Jordan.
 
 """
-import math as m
+import math
 
 
 class LinearRegressionModel:
@@ -52,9 +52,9 @@ class LinearRegressionModel:
 
     >>> example_coords = [(0.0,1.0), (1.0,2.0), (2.0,3.0), (3.0,4.0)]
     >>> model = LinearRegressionModel(example_coords, 100)
-    >>> m.isclose(model.gradient, 1.0)
+    >>> math.isclose(model.gradient, 1.0)
     True
-    >>> m.isclose(model.y_intercept, 1.0)
+    >>> math.isclose(model.y_intercept, 1.0)
     True
 
     """
@@ -69,7 +69,7 @@ class LinearRegressionModel:
     def __init__(self, coordinates: list[tuple[float, float]], angle_divisor: int) -> None:
         self.coordinates = coordinates
         self.angle_divisor = angle_divisor
-        self.angle = m.pi / angle_divisor
+        self.angle = math.pi / angle_divisor
         self.gradient, self.y_intercept, self.r_squared = self.estimate_fit(coordinates)
 
     def estimate_fit(self, coordinates: list[tuple[float, float]]) -> tuple[float, float, float]:
@@ -83,12 +83,12 @@ class LinearRegressionModel:
         r_squared_so_far = {}
 
         for angle_multiplier in range(iterations):
-            positive_m = m.tan(angle_multiplier * self.angle)
+            positive_m = math.tan(angle_multiplier * self.angle)
 
             positive_c = self.calculate_y_intercept(positive_m, mean_coord)
             positive_r_squared = self.sum_residuals_squared(coordinates, positive_m, positive_c)
 
-            negative_m = m.tan(angle_multiplier * self.angle * -1)
+            negative_m = math.tan(angle_multiplier * self.angle * -1)
 
             negative_c = self.calculate_y_intercept(negative_m, mean_coord)
             negative_r_squared = self.sum_residuals_squared(coordinates, negative_m, negative_c)
@@ -164,10 +164,10 @@ class ExponentialRegressionModel(LinearRegressionModel):
 
         self.log_coordinates = self.calculate_log_coordinates(coordinates)
 
-        log_b, log_a, self.r_squared = self.estimate_fit(self.log_coordinates)
+        self.gradient, self.y_intercept, self.r_squared = self.estimate_fit(self.log_coordinates)
 
-        self.a = m.e ** log_a
-        self.b = m.e ** log_b
+        self.a = math.e ** self.gradient
+        self.b = math.e ** self.y_intercept
 
     def calculate_log_coordinates(self, coordinates: list[tuple[float, float]]) \
             -> list[tuple[float, float]]:
@@ -176,4 +176,23 @@ class ExponentialRegressionModel(LinearRegressionModel):
         to avoid a logarithm domain error.
         """
 
-        return [(coord[0], m.log(coord[1])) for coord in coordinates if coord[1] > 0]
+        return [(coord[0], math.log(coord[1])) for coord in coordinates if coord[1] > 0]
+
+
+if __name__ == '__main__':
+    import python_ta.contracts
+
+    python_ta.contracts.DEBUG_CONTRACTS = False
+    python_ta.contracts.check_all_contracts()
+
+    import doctest
+
+    doctest.testmod(verbose=True)
+
+    import python_ta
+    python_ta.check_all(config={
+        'extra-imports': [math],
+        'allowed-io': [],
+        'max-line-length': 100,
+        'disable': ['R1705', 'C0200']
+    })
