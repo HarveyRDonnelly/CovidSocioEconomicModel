@@ -29,6 +29,15 @@ class Region:
 class SubRegion(Region):
     """
     Abstract data class to represent a sub region.
+
+    Instance Attributes:
+        - cases: mapping of case ids to the case objects of cases within a subregion
+        - num_cases_per_cap: number of cases per 100,000 citizens
+        - super_region: a subregion's superregion
+        - median_household_income: the median household income of a subregion
+        - scaled_economic_index: the arbitrary economic rating of a subregion (ie. its relationship
+        to the other subregions's median_household_income in a given superregion)
+        - scaled_case_index: the arbitrary cases per capita rating given to a subregion.
     """
 
     cases: dict[int, CovidCase]
