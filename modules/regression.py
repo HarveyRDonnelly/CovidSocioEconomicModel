@@ -92,13 +92,14 @@ class ExponentialRegressionModel(LinearRegressionModel):
 
     a: float
     b: float
+    log_coordinates: list[tuple[float, float]]
 
     def __init__(self, coordinates: list[tuple[float, float]], angle_divisor: int):
         super().__init__(coordinates, angle_divisor)
 
-        log_coordinates = self.calculate_log_coordinates(coordinates)
+        self.log_coordinates = self.calculate_log_coordinates(coordinates)
 
-        log_b, log_a = self.estimate_fit(log_coordinates)
+        log_b, log_a = self.estimate_fit(self.log_coordinates)
 
         self.a = m.e ** log_a
         self.b = m.e ** log_b
