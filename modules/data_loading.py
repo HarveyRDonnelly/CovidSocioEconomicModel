@@ -1,5 +1,28 @@
 """
-DOCSTRING
+Module Title: Data Loading Module
+Source Path: modules/data_loading.py
+
+Description:
+
+The Data Loading Module is responsible for loading raw data from external files (such as .csv) into
+the appropriate class entities for the project. The module currently only contains a concrete
+implementation of a data loading class for the City of Toronto (DataLoadingToronto). However, this
+module is designed using abstract classes so that further concrete implementations of the
+DataLoadingSystem can be easily added in the future to investigate the same trends in different
+urban regions (i.e. super-regions).
+
+The Data Loading Module also contains  helper functions that are used for cleaning and manipulating
+data as required in the project.
+
+===============================
+
+CSC110 Final Project:
+
+"Virus of Inequality: The Socio-Economic Disparity of COVID-19 Cases
+in the City of Toronto"
+
+This file is Copyright (c) 2021 Harvey Ronan Donnelly and Ewan Robert Jordan.
+
 """
 import csv
 from modules.entities import *
@@ -81,7 +104,7 @@ class DataLoadingToronto(DataLoadingSystem):
 
     def load_super_region(self, path: str) -> City:
         """
-        Method to load data for super regions from a file.
+        Method to load data for the City of Toronto super region from a file.
         """
         with open(path) as dataset:
             reader = csv.reader(dataset, delimiter=',')
@@ -99,7 +122,7 @@ class DataLoadingToronto(DataLoadingSystem):
 
     def load_sub_regions(self, path: str, city: City) -> dict[str, Neighbourhood]:
         """
-        Method to load data for all sub regions from a file.
+        Method to load data for all neighbourhoods in the City of Toronto from a file.
         """
         with open(path) as dataset:
             reader = csv.reader(dataset, delimiter=',')
@@ -119,7 +142,7 @@ class DataLoadingToronto(DataLoadingSystem):
 
     def load_covid_cases(self, path: str, neighbourhood: Neighbourhood) -> dict[int, CovidCase]:
         """
-        Method to load all covid cases for a neighbourhood.
+        Method to load all covid cases for a specified neighbourhood.
         """
         with open(path) as dataset:
             reader = csv.reader(dataset, delimiter=',')
