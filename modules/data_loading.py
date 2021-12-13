@@ -2,7 +2,7 @@
 DOCSTRING
 """
 import csv
-from entities import *
+from modules.entities import *
 
 
 # Data Formatting Functions

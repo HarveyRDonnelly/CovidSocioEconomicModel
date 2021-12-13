@@ -5,6 +5,7 @@ DOCSTRING
 from modules import data_loading as dl
 from modules.config import TorontoConfig
 from modules.entities import *
+from modules.regression import ExponentialRegressionModel
 
 
 class PreprocessingSystem:
@@ -12,8 +13,6 @@ class PreprocessingSystem:
     Class to manage all preprocessing of data for a model.
 
     Instance Attributes:
-        - start_date: the earliest that will be included in the model.
-        - end_date: the final date that will be included in the model.
         - regions: a dictionary mapping the name of a region to an instance of a Region.
 
     """
@@ -44,3 +43,18 @@ class PreprocessingSystem:
 
         self.regions['Toronto'].update_economic_scaling()
         self.regions['Toronto'].update_case_scaling()
+
+        self.toronto_model_regression()
+
+    def toronto_model_regression(self) -> None:
+        """
+        Generates exponential regression model for toronto data.
+        """
+
+        config = TorontoConfig()
+
+        coordinates = [(neighbourhood.scaled_economic_index, neighbourhood.scaled_economic_index)
+                       for neighbourhood in self.regions['Toronto'].neighbourhoods.values()]
+
+        self.regions['Toronto'].regression_model = ExponentialRegressionModel(coordinates,
+                                                                              config.regression['angle_divisor'])

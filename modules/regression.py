@@ -106,7 +106,8 @@ class ExponentialRegressionModel(LinearRegressionModel):
     def calculate_log_coordinates(self, coordinates: list[tuple[float, float]]) \
             -> list[tuple[float, float]]:
         """
-        Returns the coordinates for ln(y) vs x.
+        Returns the coordinates for ln(y) vs x. Excludes any y-coordinates that are zero in order
+        to avoid a logarithm domain error.
         """
 
-        return [(coord[0], m.log(coord[1])) for coord in coordinates]
+        return [(coord[0], m.log(coord[1])) for coord in coordinates if coord[1] > 0]

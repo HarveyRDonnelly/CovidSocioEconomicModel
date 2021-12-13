@@ -10,6 +10,9 @@ class TorontoConfig:
     Class containing config info for Toronto model.
     """
     start_date: datetime.date
+    end_date: datetime.date
+    paths: dict[str, str]
+    regression: dict[str, any]
 
     def __init__(self) -> None:
 
@@ -19,4 +22,7 @@ class TorontoConfig:
         self.paths = {
             'regions': 'data/toronto_regions.csv',
             'cases': 'data/toronto_covid_cases.csv'
+        }
+        self.regression = {
+            'angle_divisor': 1000
         }

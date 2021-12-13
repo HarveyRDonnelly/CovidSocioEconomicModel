@@ -4,6 +4,8 @@ DOCSTRING
 
 from __future__ import annotations
 import datetime
+from typing import Optional
+from modules.regression import ExponentialRegressionModel
 
 # Region entities
 
@@ -85,10 +87,12 @@ class SuperRegion(Region):
     case_multiplier: float
     max_num_cases_per_cap: int
     min_num_cases_per_cap: int
+    regression_model: Optional[ExponentialRegressionModel] = None
 
     def __init__(self, name: str, population: int) -> None:
         super().__init__(name, population)
         self._sub_regions = {}
+        self.regression_model = None
         self.update_economic_scaling()
         self.update_case_scaling()
 
