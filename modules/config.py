@@ -35,9 +35,9 @@ class TorontoConfig:
         self.end_date = datetime.date(2021, 12, 1)
 
         self.paths = {
-            'regions': 'data/pregenerated/pregenerated_toronto_regions.csv',
-            'cases': 'data/pregenerated_toronto_covid_cases.csv',
-            'shapes': 'data/pregenerated/pregenerated_toronto_boundaries/Neighbourhoods.shp'
+            'regions': 'data/toronto_regions.csv',
+            'cases': 'data/toronto_covid_cases.csv',
+            'shapes': 'data/toronto_boundaries/Neighbourhoods.shp'
         }
         self.regression = {
             'angle_divisor': 1000

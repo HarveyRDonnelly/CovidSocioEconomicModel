@@ -82,7 +82,8 @@ class RegionVisual:
         ax1.set_title('Scaled Economic Index vs Scaled Case Index')
         ax1.set_xlabel("Scaled Economic Index", fontweight="bold")
         ax1.set_ylabel("Scaled Case Index", fontweight="bold")
-
+        ax1.annotate("Residual-squared = " + str(regression_model.r_squared), xy=(0.5, 0.9), xycoords='axes fraction',
+                     fontsize=10)
         x = np.linspace(0, 10, 100)
         y = (regression_model.gradient * x) + regression_model.y_intercept
         ax2.plot(x, y)
@@ -95,6 +96,8 @@ class RegionVisual:
         ax2.set_title('Logarithm of Scaled Case Index vs Scaled Economic Index')
         ax2.set_xlabel("Scaled Economic Index", fontweight="bold")
         ax2.set_ylabel("ln(Scaled Case Index)", fontweight="bold")
+        ax2.annotate("Residual-squared = " + str(regression_model.r_squared), xy=(0.5, 0.9), xycoords='axes fraction',
+                     fontsize=10)
 
     def toronto_heatmap(self, variable: str) -> None:
         """ Creates a heat map of a region's covid numbers.
