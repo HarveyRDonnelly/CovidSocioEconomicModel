@@ -39,11 +39,19 @@ def generate_model() -> None:
     visual_system.toronto_heatmap('Income')
 
 
-go_ahead = input('Has the toronto_covid_cases.csv file been downloaded and pot into the'
-                 ' correct directory? (CovidSocioeconomicModel/data/toronto_covidcases/.csv) Y/N?')
+go_ahead = input('Have the required files been downloaded and put into the'
+                 ' correct directory? Y/N?')
+obtain = ''
 if go_ahead.lower() == 'y':
+    obtain = input('Would you like the program to automatically collect the toronto region '
+                   'data? Y/N')
+    if obtain.lower() == 'y':
+        obtain_data()
+    else:
+        ensure = input('Ensure toronto_regions.csv has been moved out of the pregenerated folder '
+                       'and replaced the other file within /data. (enter any key to confirm.)')
     print('Running project...')
-    # obtain_data()
+
     generate_model()
     print('Model Generate and Visualized.')
 else:
