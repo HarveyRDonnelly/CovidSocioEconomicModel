@@ -191,7 +191,7 @@ if __name__ == '__main__':
 
     import python_ta
     python_ta.check_all(config={
-        'extra-imports': [math],
+        'extra-imports': ['math'],
         'allowed-io': [],
         'max-line-length': 100,
         'disable': ['R1705', 'C0200']

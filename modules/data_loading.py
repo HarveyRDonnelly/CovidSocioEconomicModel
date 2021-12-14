@@ -158,3 +158,23 @@ class DataLoadingToronto(DataLoadingSystem):
                     cases[case_id] = CovidCase(case_id, date, super_region, sub_region)
 
         return cases
+
+
+if __name__ == '__main__':
+    import python_ta.contracts
+
+    python_ta.contracts.DEBUG_CONTRACTS = False
+    python_ta.contracts.check_all_contracts()
+
+    import doctest
+
+    doctest.testmod(verbose=True)
+
+    import python_ta
+
+    python_ta.check_all(config={
+        'extra-imports': ['csv', 'modules.entities'],
+        'allowed-io': ['load_super_region', 'load_covid_cases', 'load_sub_region'],
+        'max-line-length': 100,
+        'disable': ['R1705', 'C0200']
+    })
