@@ -256,3 +256,23 @@ class CovidCase:
         self.date = date
         self.super_region = super_region
         self.sub_region = sub_region
+
+
+if __name__ == '__main__':
+    import python_ta.contracts
+
+    python_ta.contracts.DEBUG_CONTRACTS = False
+    python_ta.contracts.check_all_contracts()
+
+    import doctest
+
+    doctest.testmod(verbose=True)
+
+    import python_ta
+
+    python_ta.check_all(config={
+        'extra-imports': ['__future__', 'datetime', 'typing', 'modules.regression'],
+        'allowed-io': [],
+        'max-line-length': 100,
+        'disable': ['R1705', 'C0200']
+    })

@@ -199,3 +199,24 @@ class RegionVisual:
         if name_result == 'Cabbagetown-South St.James Town':
             name_result = 'Cabbagetown-South St. James Town'
         return name_result
+
+
+if __name__ == '__main__':
+    import python_ta.contracts
+
+    python_ta.contracts.DEBUG_CONTRACTS = False
+    python_ta.contracts.check_all_contracts()
+
+    import doctest
+
+    doctest.testmod(verbose=True)
+
+    import python_ta
+
+    python_ta.check_all(config={
+        'extra-imports': ['modules.preprocessing', 'modules.regression', 'modules.config', 'numpy'
+                          'numpy', 'shapefile', 'matplotlib.pyplot', 'matplotlib.matches', 'seaborn'],
+        'allowed-io': [],
+        'max-line-length': 100,
+        'disable': ['R1705', 'C0200']
+    })

@@ -64,3 +64,23 @@ def scrape_incomes() -> None:
         for row in info:
             csv_out.writerow(row)
             print('r')
+
+
+if __name__ == '__main__':
+    import python_ta.contracts
+
+    python_ta.contracts.DEBUG_CONTRACTS = False
+    python_ta.contracts.check_all_contracts()
+
+    import doctest
+
+    doctest.testmod(verbose=True)
+
+    import python_ta
+
+    python_ta.check_all(config={
+        'extra-imports': ['tabula', 'requests', 'io', 'string', 'csv'],
+        'allowed-io': ['scrape_incomes'],
+        'max-line-length': 100,
+        'disable': ['R1705', 'C0200']
+    })
