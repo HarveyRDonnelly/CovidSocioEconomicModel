@@ -208,3 +208,5 @@ def draw_visuals_toronto() -> None:
     r.toronto_scatter_visual()
     r.toronto_heatmap('Covid')
     r.toronto_heatmap('Income')
+
+draw_visuals_toronto()
