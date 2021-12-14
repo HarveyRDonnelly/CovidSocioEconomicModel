@@ -26,7 +26,7 @@ pylint==2.10.2
 pyparsing==2.4.7
 pytest==6.2.5
 python-dateutil==2.8.2
-python-ta==2.1.1
+python-ta==1.4.1
 pytz==2021.3
 requests==2.26.0
 six==1.16.0
@@ -36,7 +36,5 @@ toml==0.10.2
 typeguard==2.12.1
 urllib3==1.26.7
 wrapt==1.12.1
-
 matplotlib~=3.5.1
-
 seaborn~=0.11.2

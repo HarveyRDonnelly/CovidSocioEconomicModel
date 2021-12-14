@@ -6,7 +6,6 @@ TODO: main run file
 
 import modules.preprocessing as p
 import modules.visualizer as v
-import requests
 from modules.data_collection import scrape_incomes
 
 
