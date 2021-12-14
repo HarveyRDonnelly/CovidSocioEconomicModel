@@ -161,7 +161,7 @@ class DataLoadingToronto(DataLoadingSystem):
                     super_region = neighbourhood.super_region
                     sub_region = neighbourhood
                     cases[case_id] = CovidCase(case_id, date, super_region, sub_region)
-                    print('[modules.data_loading] Covid Case added')
+                    print('[modules.data_loading] Covid Case added id#:' + str(case_id))
 
         return cases
 

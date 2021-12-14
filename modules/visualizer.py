@@ -113,6 +113,7 @@ class RegionVisual:
         plt.figure(figsize=(11, 9))
         id = 0
         for p in range(len(sf.shapeRecords())):
+
             shape = sf.shapeRecords()[p]
             name = sf.records()[p][7]
             name_result = ''
@@ -121,6 +122,7 @@ class RegionVisual:
                 name_result += (" " + name_list[word])
             name_result = name_result.strip()
             name_result = self.neighbourhood_name_filtration(name_result)
+            print('Extracted shape file from ' + name_result)
             x = [i[0] for i in shape.shape.points[:]]
             y = [i[1] for i in shape.shape.points[:]]
             colour = self.get_colour(name_result, variable)

@@ -43,16 +43,9 @@ go_ahead = input('Have the required files been downloaded and put into the'
                  ' correct directory? Y/N?')
 obtain = ''
 if go_ahead.lower() == 'y':
-    obtain = input('Would you like the program to automatically collect the toronto region '
-                   'data? Y/N')
-    if obtain.lower() == 'y':
-        obtain_data()
-    else:
-        ensure = input('Ensure toronto_regions.csv has been moved out of the pregenerated folder '
-                       'and replaced the other file within /data. (enter any key to confirm.)')
     print('Running project...')
-
     generate_model()
-    print('Model Generate and Visualized.')
+
+    print('Model Generated and Visualized.')
 else:
     print('Ok, rerun this file once proper files have been downloaded')
