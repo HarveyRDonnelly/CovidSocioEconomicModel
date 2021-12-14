@@ -53,7 +53,7 @@ class PreprocessingSystem:
 
         config = TorontoConfig()
 
-        coordinates = [(neighbourhood.scaled_economic_index, neighbourhood.scaled_economic_index)
+        coordinates = [(neighbourhood.scaled_economic_index, neighbourhood.scaled_case_index)
                        for neighbourhood in self.regions['Toronto'].neighbourhoods.values()]
 
         self.regions['Toronto'].regression_model = ExponentialRegressionModel(coordinates,
