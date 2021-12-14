@@ -1,5 +1,24 @@
 """
-Module Title: Visualizer
+Module Title: Model Visualizer
+Source Path: modules/visualizer.py
+
+Description:
+
+This module holds a class for creating visuals for a preprocessing system. It is able to create 4
+different graphics, two toronto heat maps, one showing the difference in income in the toronto
+region, and the other showing the covid case intensity in the toronto region, and two scatter plots,
+both showing the correlation between scaled economic index and scaled case index. One however shows
+the logarithm of the points to create a linear regression, while the other shows the actual points
+along with an exponential line of best fit.
+
+===============================
+
+CSC110 Final Project:
+
+"Virus of Inequality: The Socio-Economic Disparity of COVID-19 Cases
+in the City of Toronto"
+
+This file is Copyright (c) 2021 Harvey Ronan Donnelly and Ewan Robert Jordan.
 """
 from modules.preprocessing import PreprocessingSystem
 from modules.regression import ExponentialRegressionModel
@@ -56,8 +75,8 @@ class RegionVisual:
         fig.suptitle('Visualizing the regression model')
         axs[0].plot(x, y)
         axs[0].scatter(data['Income'], data['Cases'])
-        axs[0].set_title('Median Household Income vs Covid Cases per 100,000'
-                         ' (by scaled index) with exponential regression model')
+        axs[0].set_title('Scaled Economic index vs Scaled Case Index'
+                         ' with exponential regression model')
         axs[0].set_xlabel("Income")
         axs[0].set_ylabel("Covid Intensity")
 
@@ -70,8 +89,8 @@ class RegionVisual:
             x_logs.append(point[0])
             y_logs.append(point[1])
         axs[1].scatter(x_logs, y_logs)
-        axs[1].set_title('Median Household Income vs Covid Cases per 100,000 '
-                         '(by scaled index) with logarithmic regression model')
+        axs[1].set_title('Scaled Economic index vs Scaled Case Index'
+                         ' with logarithmic regression model')
         axs[1].set_xlabel("Income")
         axs[1].set_ylabel("Covid Intensity")
 

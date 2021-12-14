@@ -1,4 +1,23 @@
-""" scrapey scrapey """
+"""
+Module Name: Data Collection Module
+Source Path: modules/data_collection.py
+
+Description:
+
+This module opens and reads all 140 neighbourhood profile pdfs from the Toronto Neighbourhood
+Profiles website, and attains the name, population and median household income. Some neighbourhood
+names require a rather robust method of data filtration, as the names on the pdf files do not
+perfectly correlate to the names on the covid data csv files.
+
+===============================
+
+CSC110 Final Project:
+
+"Virus of Inequality: The Socio-Economic Disparity of COVID-19 Cases
+in the City of Toronto"
+
+This file is Copyright (c) 2021 Harvey Ronan Donnelly and Ewan Robert Jordan.
+"""
 import tabula as tb
 import requests
 import io
