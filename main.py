@@ -41,5 +41,10 @@ def generate_model() -> None:
 
 go_ahead = input('Has the toronto_covid_cases.csv file been downloaded and pot into the'
                  ' correct directory? (CovidSocioeconomicModel/data/toronto_covidcases/.csv) Y/N?')
-obtain_data()
-generate_model()
+if go_ahead.lower() == 'y':
+    print('Running project...')
+    # obtain_data()
+    generate_model()
+    print('Model Generate and Visualized.')
+else:
+    print('Ok, rerun this file once proper files have been downloaded')

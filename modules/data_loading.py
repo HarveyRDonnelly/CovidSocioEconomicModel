@@ -28,6 +28,7 @@ import csv
 from modules.entities import *
 
 
+
 # Data Formatting Functions
 
 def remove_commas_number_string(number_string: str) -> int:
@@ -106,6 +107,7 @@ class DataLoadingToronto(DataLoadingSystem):
         """
         Method to load data for the City of Toronto super region from a file.
         """
+        print('[modules.data_loading] Opening Toronto Region Dataset')
         with open(path) as dataset:
             reader = csv.reader(dataset, delimiter=',')
             next(reader)  # Skip the dataset's header.
@@ -124,6 +126,7 @@ class DataLoadingToronto(DataLoadingSystem):
         """
         Method to load data for all neighbourhoods in the City of Toronto from a file.
         """
+        print('[modules.data_loading] Extracting individual subregion data .')
         with open(path) as dataset:
             reader = csv.reader(dataset, delimiter=',')
             next(reader)  # Skip the dataset's header.
@@ -137,6 +140,7 @@ class DataLoadingToronto(DataLoadingSystem):
                 median_household_income = remove_commas_number_string(row[2])
                 neighbourhoods[name] = Neighbourhood(name, population, city,
                                                      median_household_income)
+                print('[modules.data_loading] Neighbourhood Added:' + name)
 
         return neighbourhoods
 
@@ -144,6 +148,7 @@ class DataLoadingToronto(DataLoadingSystem):
         """
         Method to load all covid cases for a specified neighbourhood.
         """
+        print('[modules.data_loading] Opening covid case files')
         with open(path) as dataset:
             reader = csv.reader(dataset, delimiter=',')
             next(reader)  # Skip the dataset's header.
@@ -156,6 +161,7 @@ class DataLoadingToronto(DataLoadingSystem):
                     super_region = neighbourhood.super_region
                     sub_region = neighbourhood
                     cases[case_id] = CovidCase(case_id, date, super_region, sub_region)
+                    print('[modules.data_loading] Covid Case added')
 
         return cases
 

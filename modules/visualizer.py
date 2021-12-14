@@ -20,6 +20,7 @@ in the City of Toronto"
 
 This file is Copyright (c) 2021 Harvey Ronan Donnelly and Ewan Robert Jordan.
 """
+
 from modules.preprocessing import PreprocessingSystem
 from modules.regression import ExponentialRegressionModel
 from modules.config import TorontoConfig
@@ -70,6 +71,7 @@ class RegionVisual:
             data['Income'].append(hoods[subregion].scaled_economic_index)
             if hoods[subregion].scaled_case_index != 0 and hoods[subregion].scaled_economic_index != 0:
                 points.append((hoods[subregion].scaled_economic_index, hoods[subregion].scaled_case_index))
+            print('[module.visualizer] Creating coordinate for neighbourhood: ' + subregion)
         regression_model = ExponentialRegressionModel(points, 1000)
         x = np.linspace(0, 10, 100)
         y = (regression_model.b ** x) * regression_model.a
@@ -103,7 +105,7 @@ class RegionVisual:
         sns.mpl.rc('figure', figsize=(10, 6))
 
         shp_path = config.paths['shapes']
-
+        print('[modules.visualizer] Extracting Shape files')
         sf = shp.Reader(shp_path)
         plt.figure(figsize=(11, 9))
         id = 0

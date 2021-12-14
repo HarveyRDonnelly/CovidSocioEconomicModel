@@ -35,7 +35,7 @@ class PreprocessingSystem:
         """
 
         config = TorontoConfig()
-
+        print('[modules.preprocessing] Generating Toronto Model')
         data_loading_system = dl.DataLoadingToronto(config.start_date, config.end_date)
         self.regions['Toronto'] = data_loading_system.load_super_region(config.paths['regions'])
 
@@ -58,7 +58,7 @@ class PreprocessingSystem:
         """
         Generates exponential regression model for toronto data.
         """
-
+        print('[modules.preprocessing] Generating Toronto regression model')
         config = TorontoConfig()
 
         coordinates = [(neighbourhood.scaled_economic_index, neighbourhood.scaled_case_index)
