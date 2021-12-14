@@ -166,8 +166,8 @@ class ExponentialRegressionModel(LinearRegressionModel):
 
         self.gradient, self.y_intercept, self.r_squared = self.estimate_fit(self.log_coordinates)
 
-        self.a = math.e ** self.gradient
-        self.b = math.e ** self.y_intercept
+        self.a = math.e ** self.y_intercept
+        self.b = math.e ** self.gradient
 
     def calculate_log_coordinates(self, coordinates: list[tuple[float, float]]) \
             -> list[tuple[float, float]]:
