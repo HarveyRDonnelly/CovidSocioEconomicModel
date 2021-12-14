@@ -1,5 +1,13 @@
 """
-DOCSTRING
+Module Name: Preprocessing Module
+Source Path: modules/preprocessing.py
+
+Description:
+
+This python module contains a concrete class which manages the creation of the project's
+data system. It is made to support the initialization of many different regions' covid/income data,
+but only has the city of Toronto implemented. This class also is in charge of calling the regression
+module onto a certain region.
 """
 
 from modules import data_loading as dl

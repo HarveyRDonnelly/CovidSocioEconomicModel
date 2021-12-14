@@ -1,5 +1,22 @@
 """
-DOCSTRING
+Module Name: Entities Module
+Source Path: modules/entities.py
+
+Description:
+
+This python module contains several abstract classes which create different types of object
+relating to types of regions (Super, Sub). It also contains the concrete versions of these classes,
+in the form of City and Neighbourhood. Additionally, this module holds the CovidCase class, which
+is how all covid cases are stored.
+
+===============================
+
+CSC110 Final Project:
+
+"Virus of Inequality: The Socio-Economic Disparity of COVID-19 Cases
+in the City of Toronto"
+
+This file is Copyright (c) 2021 Harvey Ronan Donnelly and Ewan Robert Jordan.
 """
 
 from __future__ import annotations
@@ -12,7 +29,7 @@ from modules.regression import ExponentialRegressionModel
 
 class Region:
     """
-    Abstract data class to represent a sub region.
+    Abstract data class to represent a region.
 
     Instance Attributes:
         - name: the name of the region.
@@ -78,6 +95,20 @@ class SuperRegion(Region):
     Representation Invariant:
         - sum(subregion.population for subregion in self.sub_regions) == self.population
 
+    Instance Attributes:
+        - _sub_regions: dictionary mapping every subregion's name to its respective subregion object
+        - economic multiplier: the float which is used to calculate the scaled economic index for
+        each subregion.
+        - max_household_income: the maximum median household income of all the subregions.
+        - min_household_income: the minimum median household income of all the subregions.
+        - case_multiplier: the float which is used to calculate the scaled economic index for each
+        subregion.
+        - max_num_cases_per_cap: the maximum number of cases per 100,000 people of all the
+         subregions.
+        - min_num_cases_per_cap: the minimum number of cases per 100,000 people of all the
+         subregions.
+        - regression_model: the ExponentialRegressionModel object which is tied to the data of
+        a superregion
     """
 
     _sub_regions: dict[str: SubRegion]
@@ -207,6 +238,12 @@ class City(SuperRegion):
 class CovidCase:
     """
     Class to represent a covid case.
+
+    Instance Attributes:
+        - case_id: a unique id ties to each covid case
+        - date: the date of the recording of a given covid case
+        - super_region: the super region which this covid case was recorded in
+        - sub_region: the sub region which this covid case was recorder in
     """
 
     case_id: int

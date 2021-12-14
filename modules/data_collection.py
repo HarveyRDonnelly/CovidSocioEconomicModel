@@ -59,17 +59,11 @@ def scrape_incomes() -> None:
             population = tb.read_pdf(urlpdf, area=(100, 0, 200, 250), pages='3')
             pop = int(''.join(filter(str.isdigit, str(population[0]['Neighbourhood'][0]))))
             info.append((name_final, pop, income))
-    with open('toronto_regions.csv', 'w', newline='') as out:
+    with open('../data/test_toronto_regions.csv', 'w', newline='') as out:
         csv_out = csv.writer(out)
         for row in info:
             csv_out.writerow(row)
             print('r')
 
-def test():
-    household_income = {342,545,222,888,666,444}
-    mult = 10 / (max(household_income) - min(household_income))
-    for p in household_income:
-        t = (p - min(household_income)) * mult
-        print((p,t))
 
-
+scrape_incomes()

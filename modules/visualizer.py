@@ -49,10 +49,12 @@ class RegionVisual:
         self.colours_income = ['#993404', '#d95f0e',
                                '#fe9929', '#fec44f', '#fee391', '#ffffd4']
 
-        self.ranges_covid = ['less than 1000', '1000 to 1800', '1800 to 2600',
-                             '2600 to 3400', '3400 to 4200', 'more than 4200']
-        self.ranges_income = ['less than $50,000', '$50,000 to $70,000', '$70,000 to $90,000',
-                              '$90,000 to $110,000', '$110,000 to $150,000', 'more than $150,000']
+        self.ranges_covid = ['less than 3000', '3000 to 3800', '3800 to 4600',
+                             '4600 to 6400', '6400 to 9200', 'more than 9200']
+
+        self.ranges_income = ['less than 50,000 CAD', '50,000 CAD to 70,000 CAD',
+                              '70,000 CAD to 90,000 CAD', '90,000 CAD ' + 'to ' + '110,000 CAD',
+                              '110,000 CAD to 150,000 CAD', 'more than 150,000 CAD']
 
     def toronto_scatter_visual(self) -> None:
         """
@@ -71,28 +73,26 @@ class RegionVisual:
         regression_model = ExponentialRegressionModel(points, 1000)
         x = np.linspace(0, 10, 100)
         y = (regression_model.b ** x) * regression_model.a
-        fig, axs = plt.subplots(2)
-        fig.suptitle('Visualizing the regression model')
-        axs[0].plot(x, y)
-        axs[0].scatter(data['Income'], data['Cases'])
-        axs[0].set_title('Scaled Economic index vs Scaled Case Index'
-                         ' with exponential regression model')
-        axs[0].set_xlabel("Income")
-        axs[0].set_ylabel("Covid Intensity")
+        fig, (ax1, ax2) = plt.subplots(1, 2)
+        fig.suptitle('Visualizing the regression model', fontweight="bold")
+        ax1.plot(x, y)
+        ax1.scatter(data['Income'], data['Cases'])
+        ax1.set_title('Scaled Economic Index vs Scaled Case Index')
+        ax1.set_xlabel("Scaled Economic Index", fontweight="bold")
+        ax1.set_ylabel("Scaled Case Index", fontweight="bold")
 
         x = np.linspace(0, 10, 100)
         y = (regression_model.gradient * x) + regression_model.y_intercept
-        axs[1].plot(x, y)
+        ax2.plot(x, y)
         x_logs = []
         y_logs = []
         for point in regression_model.calculate_log_coordinates(points):
             x_logs.append(point[0])
             y_logs.append(point[1])
-        axs[1].scatter(x_logs, y_logs)
-        axs[1].set_title('Scaled Economic index vs Scaled Case Index'
-                         ' with logarithmic regression model')
-        axs[1].set_xlabel("Income")
-        axs[1].set_ylabel("Covid Intensity")
+        ax2.scatter(x_logs, y_logs)
+        ax2.set_title('Logarithm of Scaled Case Index vs Scaled Economic Index')
+        ax2.set_xlabel("Scaled Economic Index", fontweight="bold")
+        ax2.set_ylabel("ln(Scaled Case Index)", fontweight="bold")
 
     def toronto_heatmap(self, variable: str) -> None:
         """ Creates a heat map of a region's covid numbers.
@@ -150,17 +150,17 @@ class RegionVisual:
                        '#807dbaF0', '#6a51a3F0', '#54278fF0']
             toronto = self.system.regions['Toronto']
             num_cases = toronto.neighbourhoods[name_result].num_cases_per_cap
-            if num_cases < 1000:
+            if num_cases < 3000:
                 colour = colours[0]
-            elif 1000 <= num_cases < 1800:
+            elif 3000 <= num_cases < 3800:
                 colour = colours[1]
-            elif 1800 <= num_cases < 2600:
+            elif 3800 <= num_cases < 4600:
                 colour = colours[2]
-            elif 2600 <= num_cases < 3400:
+            elif 4600 <= num_cases < 6400:
                 colour = colours[3]
-            elif 3400 <= num_cases < 4200:
+            elif 6400 <= num_cases < 9200:
                 colour = colours[4]
-            elif num_cases >= 4200:
+            elif num_cases >= 9200:
                 colour = colours[5]
             return colour
 
