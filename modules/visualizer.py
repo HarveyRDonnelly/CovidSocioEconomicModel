@@ -1,10 +1,17 @@
-""" Visualizes covid data for a given system """
+"""
+Module Title: Visualizer
+"""
 from modules.preprocessing import PreprocessingSystem
 from modules.regression import ExponentialRegressionModel
+from modules.config import TorontoConfig
+
 import numpy as np
 import shapefile as shp
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import seaborn as sns
+
+config = TorontoConfig()
 
 
 class RegionVisual:
@@ -12,21 +19,31 @@ class RegionVisual:
     Creates a shapely visual of different attributes of a region
 
     Instance Attributes:
-    - system: the preprocessing system which will have visuals created for
+    - system: the preprocessing system which will have visuals created for.
     """
     system: PreprocessingSystem
 
     def __init__(self, system: PreprocessingSystem):
         self.system = system
+        self.colours_covid = ['#dadaebFF', '#bcbddcF0', '#9e9ac8F0',
+                              '#807dbaF0', '#6a51a3F0', '#54278fF0']
+        self.colours_income = ['#993404', '#d95f0e',
+                               '#fe9929', '#fec44f', '#fee391', '#ffffd4']
+
+        self.ranges_covid = ['less than 1000', '1000 to 1800', '1800 to 2600',
+                             '2600 to 3400', '3400 to 4200', 'more than 4200']
+        self.ranges_income = ['less than $50,000', '$50,000 to $70,000', '$70,000 to $90,000',
+                              '$90,000 to $110,000', '$110,000 to $150,000', 'more than $150,000']
 
     def toronto_scatter_visual(self) -> None:
         """
-        Creates a scatter plot comparing subregions income against covid cases
+        Creates a scatter plot comparing toronto neighbourhoods' income against covid cases.
         """
         data = {'Cases': [], 'Income': []}
         toronto = self.system.regions['Toronto']
         hoods = toronto.neighbourhoods
         points = []
+
         for subregion in hoods:
             data['Cases'].append(hoods[subregion].scaled_case_index)
             data['Income'].append(hoods[subregion].scaled_economic_index)
@@ -34,21 +51,39 @@ class RegionVisual:
                 points.append((hoods[subregion].scaled_economic_index, hoods[subregion].scaled_case_index))
         regression_model = ExponentialRegressionModel(points, 1000)
         x = np.linspace(0, 10, 100)
-        y = (regression_model.b**x) * regression_model.a
-        plt.plot(x, y)
-        plt.scatter(data['Income'], data['Cases'])
-        plt.show()
+        y = (regression_model.b ** x) * regression_model.a
+        fig, axs = plt.subplots(2)
+        fig.suptitle('Visualizing the regression model')
+        axs[0].plot(x, y)
+        axs[0].scatter(data['Income'], data['Cases'])
+        axs[0].set_title('Median Household Income vs Covid Cases per 100,000'
+                         ' (by scaled index) with exponential regression model')
+        axs[0].set_xlabel("Income")
+        axs[0].set_ylabel("Covid Intensity")
+
+        x = np.linspace(0, 10, 100)
+        y = (regression_model.gradient * x) + regression_model.y_intercept
+        axs[1].plot(x, y)
+        x_logs = []
+        y_logs = []
+        for point in regression_model.calculate_log_coordinates(points):
+            x_logs.append(point[0])
+            y_logs.append(point[1])
+        axs[1].scatter(x_logs, y_logs)
+        axs[1].set_title('Median Household Income vs Covid Cases per 100,000 '
+                         '(by scaled index) with logarithmic regression model')
+        axs[1].set_xlabel("Income")
+        axs[1].set_ylabel("Covid Intensity")
 
     def toronto_heatmap(self, variable: str) -> None:
-        """ Creates a heat map of a region's covid numbers
-
+        """ Creates a heat map of a region's covid numbers.
             Preconditions:
             - variable in ['Covid', 'Income']
         """
         sns.set(style='whitegrid', palette='pastel', color_codes=True)
         sns.mpl.rc('figure', figsize=(10, 6))
 
-        shp_path = '../data/toronto_boundaries/Neighbourhoods.shp'
+        shp_path = config.paths['shapes']
 
         sf = shp.Reader(shp_path)
         plt.figure(figsize=(11, 9))
@@ -58,7 +93,7 @@ class RegionVisual:
             name = sf.records()[p][7]
             name_result = ''
             name_list = name.split()
-            for word in range(len(name_list)-1):
+            for word in range(len(name_list) - 1):
                 name_result += (" " + name_list[word])
             name_result = name_result.strip()
             name_result = self.neighbourhood_name_filtration(name_result)
@@ -67,15 +102,24 @@ class RegionVisual:
             colour = self.get_colour(name_result, variable)
             plt.plot(x, y, 'k')
             plt.fill(x, y, colour)
-            if variable == 'Covid':
-                plt.title('Covid-19 Intensity in Toronto Neighbourhoods')
-            elif variable == 'Income':
-                plt.title('Median Household Income in Toronto Neighbourhoods')
+
             id = id + 1
+
+        if variable == 'Covid':
+            plt.title('Covid-19 Intensity in Toronto Neighbourhoods (cases per 100,000)')
+            legend = [mpatches.Patch(color=col, label=rang) for col, rang in
+                      zip(tuple(self.colours_covid), tuple(self.ranges_covid))]
+            plt.legend(handles=legend)
+        elif variable == 'Income':
+            plt.title('Median Household Income in Toronto Neighbourhoods')
+            legend = [mpatches.Patch(color=col, label=rang) for col, rang in
+                      zip(tuple(self.colours_income), tuple(self.ranges_income))]
+            plt.legend(handles=legend)
+        plt.show()
 
     def get_colour(self, name_result: str, variable: str) -> str:
         """ Returns the colour corresponding to the amount of covid cases
-            per capita in a neighbourhood
+            per capita in a neighbourhood.
 
             Preconditions:
             - name_result in toronto.neighbourhoods.keys()
@@ -121,7 +165,11 @@ class RegionVisual:
             return colour
 
     def neighbourhood_name_filtration(self, name_result: str) -> str:
-        """ Returns neighbourhood names which match up with other datasets."""
+        """ Returns neighbourhood names which match up with other datasets.
+
+            Preconditions:
+            - len(name_result) > 0
+        """
         if name_result == 'North St.James Town':
             name_result = 'North St. James Town'
         if name_result == 'Danforth East York':
@@ -139,12 +187,5 @@ def draw_visuals_toronto() -> None:
     p.init_toronto_model()
     r = RegionVisual(p)
     r.toronto_scatter_visual()
-
-
-def draw_heat_toronto() -> None:
-    """ Initializes toronto model and runs both heat map visuals."""
-    p = PreprocessingSystem()
-    p.init_toronto_model()
-    r = RegionVisual(p)
     r.toronto_heatmap('Covid')
     r.toronto_heatmap('Income')
