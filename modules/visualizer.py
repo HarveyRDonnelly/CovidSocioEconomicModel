@@ -74,7 +74,7 @@ class RegionVisual:
         x = np.linspace(0, 10, 100)
         y = (regression_model.b ** x) * regression_model.a
         fig, (ax1, ax2) = plt.subplots(1, 2)
-        fig.suptitle('Visualizing the regression model', fontweight="bold")
+        fig.suptitle('Visualizing the regression model: (September 2020 - December 2021)', fontweight="bold")
         ax1.plot(x, y)
         ax1.scatter(data['Income'], data['Cases'])
         ax1.set_title('Scaled Economic Index vs Scaled Case Index')
@@ -125,7 +125,8 @@ class RegionVisual:
             id = id + 1
 
         if variable == 'Covid':
-            plt.title('Covid-19 Intensity in Toronto Neighbourhoods (cases per 100,000)')
+            plt.title('Covid-19 Intensity in Toronto Neighbourhoods (cases per 100,000) '
+                      '- (September 2020 - December 2021)')
             legend = [mpatches.Patch(color=col, label=rang) for col, rang in
                       zip(tuple(self.colours_covid), tuple(self.ranges_covid))]
             plt.legend(handles=legend)

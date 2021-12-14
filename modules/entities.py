@@ -29,7 +29,7 @@ from modules.regression import ExponentialRegressionModel
 
 class Region:
     """
-    Abstract data class to represent a region.
+    Class to represent a region.
 
     Instance Attributes:
         - name: the name of the region.
@@ -47,7 +47,7 @@ class Region:
 
 class SubRegion(Region):
     """
-    Abstract data class to represent a sub region.
+    Class to represent a sub region.
 
     Instance Attributes:
         - cases: mapping of case ids to the case objects of cases within a subregion
@@ -90,7 +90,7 @@ class SubRegion(Region):
 
 class SuperRegion(Region):
     """
-    Abstract data class to represent a super region.
+    Class to represent a super region.
 
     Representation Invariant:
         - sum(subregion.population for subregion in self.sub_regions) == self.population
