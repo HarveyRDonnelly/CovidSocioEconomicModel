@@ -1,7 +1,20 @@
 """
-DOCSTRING
+Module Name: Main Module
+Source Path: main.py
 
-TODO: main run file
+Description:
+
+This python module runs the entire project. First it obtains necessary data, then it generates a
+model of the processing system, which in turn produces visuals for the model.
+
+===============================
+
+CSC110 Final Project:
+
+"Virus of Inequality: The Socio-Economic Disparity of COVID-19 Cases
+in the City of Toronto"
+
+This file is Copyright (c) 2021 Harvey Ronan Donnelly and Ewan Robert Jordan.
 """
 
 import modules.preprocessing as p
