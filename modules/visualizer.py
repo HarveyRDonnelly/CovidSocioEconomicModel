@@ -198,15 +198,3 @@ class RegionVisual:
         if name_result == 'Cabbagetown-South St.James Town':
             name_result = 'Cabbagetown-South St. James Town'
         return name_result
-
-
-def draw_visuals_toronto() -> None:
-    """ Initializes a the toronto model and runs the scatter plot visual."""
-    p = PreprocessingSystem()
-    p.init_toronto_model()
-    r = RegionVisual(p)
-    r.toronto_scatter_visual()
-    r.toronto_heatmap('Covid')
-    r.toronto_heatmap('Income')
-
-draw_visuals_toronto()

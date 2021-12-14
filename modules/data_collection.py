@@ -46,7 +46,7 @@ def scrape_incomes() -> None:
             else:
                 namep = name_fin
             name_final = namep.strip()
-            print(name_final)
+            print(name_final + ' has been sraped')
 #  these conditionals are here to fix minor spelling differences between these neighbourhood names
 #  and those of the covid case data
             if name_final[0:5] == 'Briar':
@@ -59,11 +59,8 @@ def scrape_incomes() -> None:
             population = tb.read_pdf(urlpdf, area=(100, 0, 200, 250), pages='3')
             pop = int(''.join(filter(str.isdigit, str(population[0]['Neighbourhood'][0]))))
             info.append((name_final, pop, income))
-    with open('../data/test_toronto_regions.csv', 'w', newline='') as out:
+    with open('data/toronto_regions.csv', 'w', newline='') as out:
         csv_out = csv.writer(out)
         for row in info:
             csv_out.writerow(row)
             print('r')
-
-
-scrape_incomes()
