@@ -25,6 +25,7 @@ from string import digits
 import csv
 
 
+
 def scrape_incomes() -> None:
     """ Attains population, name and median household income from Toronto neighbourhood profile pdfs"""
     info = [('Region', 'Population', 'Median Household Income(pre-tax)'), ('Toronto', 2731571, 65829)]
@@ -46,7 +47,7 @@ def scrape_incomes() -> None:
             else:
                 namep = name_fin
             name_final = namep.strip()
-            print(name_final + ' has been scraped')
+            print('[modules.data_collection]' + name_final + ' pdf file has been scraped')
 #  these conditionals are here to fix minor spelling differences between these neighbourhood names
 #  and those of the covid case data
             if name_final[0:5] == 'Briar':
