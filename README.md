@@ -3,6 +3,10 @@
 ## Project Overview
 This software is designed to generate models to investigate the relationship between COVID-19 case numbers and the socio-economic background of various urban regions. We have focussed on the City of Toronto for our concrete implementation, although the software is designed to facilitate other urban regions. The software will generate regression models and heatmaps visualising the relevant data in order to address the chosen research question.
 
+## Requirements
+* Python 3.9+
+* Java Runtime Environment (JRE) 8+
+
 ## Run Instructions
 1. Clone repository:
 ```
